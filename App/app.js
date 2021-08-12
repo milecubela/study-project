@@ -20,7 +20,6 @@ connection.connect((err) => {
 
 // Dohvacanje svih usera iz baze
 app.get('/users', (req, res) => {
-    console.log("Golemo radi");
     connection.query('SELECT * FROM users', (err, result) => {
             if (err) throw err;
             res.send(result);
@@ -39,12 +38,12 @@ app.post('/users/register', async (req, res) => {
         // Ubacuje user objekt u bazu
         connection.query("INSERT INTO users SET ?", user, (err, result) => {
             if (err) throw err
-            console.log("Kreiran korisnik ?")
+            console.log("Korisnik kreiran")
         })
     } catch (error) {
         console.log(error)
     }
-    res.status(100).send("Sve uredu brat moj")
+    res.status(100).send("Korisnik kreiran")
 })
 
 // Autentikacija korisnika, i login
@@ -55,7 +54,6 @@ app.post("/users/login", async (req, res) =>{
             if (err)throw reject(err)
             const resultJson = JSON.parse(JSON.stringify(result[0]))
             console.log(resultJson)
-            console.log(resultJson.pass)
             resolve(resultJson)
         })
       });
@@ -67,18 +65,14 @@ app.post("/users/login", async (req, res) =>{
             await bcrypt.compare(req.body.pass, user.pass, (err, result) => {
                 console.log(req.body.pass + " USPOREDBA " + user.pass);
                 if(err){
-                    console.log("Nastao je error");
                     throw err;
                 };
-                console.log(result + "Result iz comparea");
             })
            }
         catch (err) {}
-      
       }).catch(err => {
         console.log(err)
       })
-
 })
 
 
